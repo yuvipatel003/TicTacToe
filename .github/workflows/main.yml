@@ -40,3 +40,23 @@ jobs:
         with:
             name: unit_test_report.html
             path: app/build/reports/tests/testDebugUnitTest/
+
+  # Instrumented test
+  instrumented-test:
+    needs: [unit-test]
+    runs-on: macos-latest
+    steps:
+      - name: Checkout branch code
+        uses: actions/checkout@v3
+
+      - name: Run intrumented tests
+        uses: reactivecircus/android-emulator-runner@v3
+        with:
+          api-level: 29
+          script: ./gradlew connectedCheck
+
+      - name: Upload instrumented test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: instrumented_test_report.html
+          path: app/build/reports/androidTests/connected/
